@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}
+Home Page
+{% endblock title %}
+{% block content %}
+<style>
+    h1,
+    h2 {
+        font-weight: 900;
+    }
+
+    h1 {
+        color: #F42D2D;
+    }
+
+    img {
+        object-fit: cover;
+        object-position: 0 0;
+        border-radius: 10px;
+        position: relative;
+        top: 0;
+        right: 0;
+    }
+</style>
+<div class="banner container-fluid d-flex justify-content-around">
+    <div class="banner">
+        <h2>Mobile</h2>
+        <h1>Backcover<br />Tempered Glass</h1>
+        <button class="btn btn-danger rounded-5">Shop Now</button>
+    </div>
+    {% load static %}
+    <img src="{% static 'assets/Banner/Banner Shop All.png' %}" alt="">
+</div>
+<div class="catergory">
+    <div class="card" style="width: 18rem;">
+        <img src="{% static 'assets/Category/Category Tempered Glass.png' %}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+</div>
+<div class="about-us"></div>
+<div class="features"></div>
+{% endblock content %}

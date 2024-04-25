@@ -1,0 +1,12 @@
+{% extends "account.html" %}
+
+{% block title %}Address{% endblock title %}
+
+{% block contentAccount %}
+    <h6>My address</h6>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-success" type="submit">Update</button>
+    </form>
+{% endblock contentAccount %}

@@ -1,0 +1,9 @@
+{% extends "account.html" %}
+
+{% block contentAccount %}
+    <form method="post">
+        {% csrf_token %}
+        <p>Request account deletion</p>
+        <button class="btn btn-danger" type="submit">Delete</button>
+    </form>
+{% endblock contentAccount %}

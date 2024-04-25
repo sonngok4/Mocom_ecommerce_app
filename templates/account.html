@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3">
+
+    </div>
+    <!-- Main Content -->
+    <div class="col-md-9">
+
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-auto">
+        <h3>My Account</h3>
+        <ul class="list-group" style="list-style-type: none;">
+            <li><a href="{% url 'account' %}" class="list-group-item">Profile</a></li>
+            <li><a href="{% url 'address' %}" class="list-group-item">Address</a></li>
+            <li><a href="{% url 'password_change' %}" class="list-group-item">Change Password</a></li>
+            <li><a href="{% url 'privacy_settings' %}" class="list-group-item">Privacy Settings</a></li>
+        </ul>
+        </div>
+        <div class="col-6">
+        <div class="container-fluid bg-white p-5">
+            {% block contentAccount %}
+            {% endblock contentAccount %}
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
