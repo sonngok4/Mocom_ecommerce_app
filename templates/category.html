@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex container justify-content-start flex-column">
+    {% for category in categories %}
+    <div class="row pb-5">
+        <h2>{{ category.name }}</h2>
+        {% for product in category.products.all %}
+        <div class="product col">
+            <a class="text-decoration-none text-black" href="{% url 'product_detail' product.pk%}">
+                <div class="product-image rounded-3 p-4 d-flex justify-content-center" style="background-color: #EDF2F4;">
+                    <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="img-product">
+                </div>
+                <h5>{{ product.name }}</h5>
+                <p>{{ product.unit }} {{ product.price | floatformat:0 }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

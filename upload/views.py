@@ -50,6 +50,7 @@ class PhotoAPIView(views.APIView):
 
             return custom_response("Upload images successfully!", "Success", data, 200)
 
+
     def put(self, request, photo_id):
         try:
             photo = Photo.objects.get(id=photo_id)

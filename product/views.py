@@ -1,8 +1,6 @@
 from rest_framework import views
-from rest_framework.response import Response
 from django.http import Http404
 
-# from django.contrib.auth.models import User
 from .serializers import (
     CategorySerializer,
     ProductSerializer,
@@ -11,11 +9,7 @@ from .serializers import (
 )
 from .models import Category, Product, ProductImage, ProductComment
 from ecommerce_web_app.helpers import custom_response, parse_request
-from rest_framework.parsers import JSONParser
-from json import JSONDecodeError
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
-
-# from django.contrib.auth.models import User
+from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -122,6 +116,7 @@ class ProductViewAPI(views.APIView):
                 discount=data["discount"],
                 amount=data["amount"],
                 thumbnail=data["thumbnail"],
+                description=data["description"],
                 category_id=category,
             )
             product.save()

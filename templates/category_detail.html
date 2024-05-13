@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ category.0.name }}</h1>
+<div class="row">
+    {% for product in products %}
+    <div class="product col">
+        <a class="text-decoration-none text-black" href="{% url 'product_detail' product.pk%}">
+            <div class="product-image rounded-3 p-4" style="background-color: #EDF2F4;">
+                <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="img-product">
+            </div>
+            <h5>{{ product.name }}</h5>
+            <p>{{ product.unit }} {{ product.price | floatformat:0 }}</p>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

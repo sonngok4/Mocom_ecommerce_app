@@ -1,9 +1,39 @@
 {% extends "account.html" %}
-
 {% block contentAccount %}
-    <form method="post">
+<div>
+    <h2>Request Account Deletion</h2>
+    <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+    <form id="delete-account-form" method="post">
         {% csrf_token %}
-        <p>Request account deletion</p>
-        <button class="btn btn-danger" type="submit">Delete</button>
+        <button id="show-confirmation" class="btn btn-danger">Delete Account</button>
+        <div id="confirmation-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <p>Please confirm that you want to delete your account.</p>
+                <button id="confirm-delete" class="btn btn-danger">Confirm</button>
+                <button id="cancel-delete" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
     </form>
+</div>
 {% endblock contentAccount %}
+{% block scripts %}
+<script>
+    const deleteAccountForm = document.getElementById('delete-account-form');
+    const showConfirmationBtn = document.getElementById('show-confirmation');
+    const confirmationModal = document.getElementById('confirmation-modal');
+    const confirmDeleteBtn = document.getElementById('confirm-delete');
+    const cancelDeleteBtn = document.getElementById('cancel-delete');
+
+    showConfirmationBtn.addEventListener('click', () => {
+        confirmationModal.style.display = 'block';
+    });
+
+    cancelDeleteBtn.addEventListener('click', () => {
+        confirmationModal.style.display = 'none';
+    });
+
+    confirmDeleteBtn.addEventListener('click', () => {
+        deleteAccountForm.submit();
+    });
+</script>
+{% endblock scripts %}

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block style %}
+<style>
+    p {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+    }
+
+    .text {
+        text-align: left;
+    }
+
+    .value {
+        text-align: right;
+        margin-left: auto;
+    }
+</style>
+{% endblock %}
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+<div class="containter">
+    <h1>Checkout</h1>
+    <div class="row">
+        <h3>Delivery address</h3>
+        <div class="col d-flex ">
+            <div class="col-2 d-flex justify-content-start gap-2">
+                <strong>{{user.first_name}} {{user.last_name}}</strong>
+                <strong>{{user.phone}}</strong>
+            </div>
+            <div class="col-6 d-flex justify-content-start text-align-start gap-3">
+                {{user.address}}
+                <a href="{% url 'address'%}" class="text-decoration-none">Change</a>
+            </div>
+        </div>
+        <hr />
+    </div>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr>
+                    <td class="d-flex">
+                        <img src="{{ item.product.thumbnail }}" alt="{{ item.product.name }}" width="100rem">
+                        <p> {{ item.product.name }}</p>
+                    </td>
+                    <td>{{item.product.unit}} {{ item.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{item.product.unit}} {{ item.total_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="row m-0 p-0">
+            <div class="col">
+                <h3>Payment</h3>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <h4>Cash on Delivery</h4>
+            </div>
+        </div>
+        <hr />
+        <div class="row m-0 p-0 container-fluid">
+            <div class="col-6"></div>
+            <div class="col-6 d-flex flex-column justify-content-end align-items-end">
+                <p>
+                    <span class="text">Merchandise Subtotal:</span>
+                    <span class="value">{{ item.product.unit }} {{ order.total_price }}</span>
+                </p>
+                <p>
+                    <span class="text">Shipping Total:</span>
+                    <span class="value">KLR 30.00</span>
+                </p>
+                <p>
+                    <span class="text">Total Price:</span>
+                    <span class="value">{{ item.product.unit }} {{ order.total_price | add:30 }}</span>
+                </p>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-6">
+                <p>By clicking "Place Order", you are agreeing to<a href="#" class="text-decoration-none">Mocom's
+                        General Transaction Terms</a></p>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+                <form action="{% url 'place_order' order.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Place Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

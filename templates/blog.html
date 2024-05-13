@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block style %}
+<style>
+    .blog {
+        background-color: #EDF2F4;
+    }
+</style>
+{% endblock style %}
+{% block content %}
+{% load static %}
+<div class="container-fluid d-flex flex-column my-5 gap-5">
+    <h1>Blog Posts</h1>
+    <div class="row d-flex flex-column gap-5">
+        <div class="col blog d-flex p-5 rounded-5">
+            <div class="body-blog d-flex flex-column p-3 gap-2">
+                <h1>Tempered Glass</h1>
+                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nam, cumque repellendus sequi quod eveniet
+                    qui quis dolorem eaque maxime expedita eum fuga aperiam deleniti tempora provident quidem error
+                    necessitatibus! A?
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem aut modi quibusdam, dolorem odit
+                    illum dolorum vel nobis quos? Maxime perspiciatis esse repellendus veniam ducimus vel eveniet magnam
+                    doloribus quasi. Necessitatibus, eaque voluptas.
+                </p>
+            </div>
+            <div class="image-blog">
+                <img src="{% static 'assets/Banner/Temperd-Glass.png' %}" alt="tempered glass">
+            </div>
+        </div>
+        <div class="col blog d-flex p-5 rounded-5">
+            <div class="image-blog">
+                <img src="{% static 'assets/Banner/Back-Cover.png' %}" alt="tempered glass">
+            </div>
+            <div class="body-blog d-flex flex-column p-3 gap-2">
+                <h1>Back Cover</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam facilis eveniet alias, ab tempore
+                    consequuntur animi quidem quasi pariatur est nam libero praesentium adipisci eligendi quo ipsum
+                    delectus nobis quas.
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Expedita harum corporis, ab, fugit
+                    accusamus repellat quaerat blanditiis neque laboriosam officiis commodi placeat dolorum architecto
+                    doloribus et, labore inventore sed. Dignissimos? Quisquam natus illum, dolore voluptatum rem ipsam?
+                    Quisquam natus facilis et expedita. Quisquam natus, doloremque!
+                </p>
+            </div>
+        </div>
+        <div class="col blog d-flex p-5 rounded-5">
+            <div class="image-blog"></div>
+            <div class="body-blog d-flex flex-column p-3 gap-2">
+                <h1>Mobile Brand and Price Strategy</h1>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure magni, vitae velit deleniti sequi, qui
+                    corporis error quo, cumque similique et excepturi iste esse? Sunt, nulla ducimus. Blanditiis, atque
+                    quaerat!Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure magni, vitae velit deleniti
+                    sequi, qui corporis error quo, cumque similique et excepturi iste esse? Sunt, nulla ducimus.
+                    Blanditiis, atque quaerat!Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure magni, vitae
+                    velit deleniti sequi, qui corporis error quo, cumque similique et excepturi iste esse? Sunt, nulla
+                    ducimus. Blanditiis, atque quaerat!Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure
+                    magni, vitae velit deleniti sequi, qui corporis error quo, cumque similique et excepturi iste esse?
+                    Sunt, nulla ducimus. Blanditiis, atque quaerat!
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endblock content %}

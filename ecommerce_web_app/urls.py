@@ -20,12 +20,10 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("pages.urls")),  # homepage and about page are in pages app
-    path("", include("product.urls")),  # products app contains all product related urls
-    path("users/", include("users.urls")),  # new
-    path("users/", include("django.contrib.auth.urls")),  # new
-    # path("", include("cart.urls")),  # cart app contains all cart related urls
-    # path("", include("oders.urls")),  # oders app contains all oders related urls
+    path("", include("pages.urls")),
+    path("", include("product.urls")),
+    path("users/", include("users.urls")),
+    path("users/", include("django.contrib.auth.urls")),
     path("", include("upload.urls")),
     path("api/v1/", include("upload.urls")),
     path("api/v1/", include("djoser.urls")),

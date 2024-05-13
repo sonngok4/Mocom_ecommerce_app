@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* Style for the checkboxes */
+    .checkbox {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    #selectAll,
+    #selectAll2 {
+        width: 20px;
+        height: 20px
+    }
+
+    /* Style for checked checkboxes */
+    .checkbox:checked {
+        background-color: #007bff;
+    }
+
+    .total-price:focus {
+        outline: none;
+        /* Remove the outline when the input is focused */
+
+    }
+</style>
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}"><h5>{{ message }}</h5></div>
+{% endfor %}
+{% endif %}
+<div class="container mt-3">
+    {% if cart_items|length != 0 %}
+    <div class="row d-flex flex-column gap-3">
+        <div class="row">
+            <div class="col-md-4 d-flex align-items-center gap-3">
+                <input type="checkbox" id="selectAll">
+                <label for="selectAll">Product</label>
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">Unit price</div>
+                    <div class="col d-flex justify-content-center align-items-center">Quantity</div>
+                    <div class="col d-flex justify-content-center align-items-center">Total Price</div>
+                    <div class="col d-flex justify-content-center align-items-center">Actions</div>
+                </div>
+            </div>
+        </div>
+        {% for item in cart_items %}
+        <div class="row " data-item-id="{{ item.id }}">
+            <div class="col-auto">
+                <input type="checkbox" class="checkbox" data-price="{{ item.total_price }}"
+                    data-name="{{ item.product.name }}" data-unit-price="{{ item.product.price }}"
+                    data-quantity="{{ item.quantity }}" name="selected_products" value="{{ item.product.id }}"
+                    placeholder="...">
+            </div>
+            <div class="col-4 d-flex">
+                <img src="{{ item.product.thumbnail }}" alt="{{ item.product.name }}">
+                <h4>{{ item.product.name }}</h4>
+            </div>
+            <div class="col d-flex justify-content-around align-items-center">
+                <div class="col">
+                    <h6>{{item.product.unit}} {{ item.product.price | floatformat:0 }}</h6>
+                </div>
+                <div
+                    class="quantity-group row d-flex align-items-center card flex-row justify-content-center rounded-0">
+                    <div class="col card rounded-0 align-items-center ">
+                        <button aria-label="Decrease" type="button" class="btn decrease-btn"><i
+                                class="fa-solid fa-minus"></i></button>
+                    </div>
+                    <div class="col rounded-0">
+                        <form action="{% url 'update_cart_item' item.id %}" method="post" class="update-form">
+                            {% csrf_token %}
+                            <input type="text" name="quantity" value="{{ item.quantity }}" min="1"
+                                class="quantity-input border-0 text-center" placeholder="{{ item.quantity }}">
+                        </form>
+                    </div>
+                    <div class="col card rounded-0 align-items-center">
+                        <button aria-label="Increase" type="button" class="btn increase-btn">
+                            <i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="col total-price text-center">
+                    <label for="total-price">LKR</label>
+                    <output name="total-price" readonly class="total-price">
+                        <span class="price">{{ item.total_price }}</span>
+                    </output>
+                </div>
+                <div class="col">
+                    <form action="{% url 'delete_cart_item' item.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="selected_products_data" id="selected_products_data">
+                        <button type="submit" class="btn btn-danger delete-btn">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="sticky-xxl-bottom">
+        <div class="container row bg-body-tertiary d-flex justify-content-around align-items-center">
+            <div class="col">
+                <input type="checkbox" id="selectAll2" placeholder="Select All/None">
+                <label for="selectAll">Select All</label>
+            </div>
+            <div class="col">
+                <form action="{% url 'delete_all_items' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" id="delete-all">Delete All</button>
+                </form>
+            </div>
+            <div class="col">
+                <label for="totalPrice">
+                    <h6>
+                        Total Price: LKR
+                        <output name="totalPrice" class="totalPrice"><span id="totalPrice">0.0</span></output>
+                    </h6>
+                </label>
+            </div>
+            <div class="col">
+                <form class="d-flex justify-content-end " method="post" action="{% url 'create_order' %}">
+                    {% csrf_token %}
+                    <ul class="list-group-numbered">
+                        {% for item in cart_items %}
+                        <li>
+                            <input class="d-none" type="checkbox" name="selected_products" value="{{ item.product.id }}"
+                                placeholder="...">
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="submit" class="btn btn-success">Checkout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <a href="{% url 'products' %}" class="btn btn-primary">Continue shopping</a>
+    {% endif %}
+</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const alertPopup = document.querySelector('.alert')
+
+            if (alertPopup) {
+                setTimeout(() => {
+                    alertPopup.remove()
+                }, 3000)
+            }
+        })
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all quantity input fields
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+
+            // Add event listener to each quantity input field
+            quantityInputs.forEach(function (input) {
+                input.addEventListener('input', function () {
+                    const form = this.closest('.update-form'); // Get the parent form
+                    const formData = new FormData(form); // Create FormData object from the form
+                    const quantity = this.value; // Get the new quantity value
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}', // Include CSRF token in the request headers
+                            'Accept': 'application/json', // Add this line to specify that you expect JSON response
+                        }
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! Status: ${response.status}`);
+                            }
+                            return response.json(); // Parse the response as JSON
+                        })
+                        .then(data => {
+                            // Handle the JSON response data
+                            if (data.success) {
+                                const itemRow = document.querySelector(`.row[data-item-id="${data.id}"]`);
+                                const totalPriceSpan = itemRow.querySelector('.total-price .price');
+                                const checkboxInput = itemRow.querySelector('.checkbox');
+
+                                totalPriceSpan.textContent = parseFloat(data.total_price).toFixed(2);
+                                checkboxInput.setAttribute('data-price', data.total_price);
+
+                                calculateTotal();
+                            } else { }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            });
+
+            // Get all decrease and increase buttons
+            const decreaseButtons = document.querySelectorAll('.decrease-btn');
+            const increaseButtons = document.querySelectorAll('.increase-btn');
+
+            // Add event listeners to decrease and increase buttons
+            decreaseButtons.forEach((btn, index) => {
+                btn.addEventListener('click', () => {
+                    const input = quantityInputs[index];
+                    let currentValue = parseInt(input.value);
+                    if (currentValue > 1) {
+                        currentValue--;
+                        input.value = currentValue;
+                        input.dispatchEvent(new Event('input')); // Dispatch input event to trigger form submission
+                        updateQuantity(input, currentValue); // Update displayed quantity
+                    }
+                });
+            });
+
+            increaseButtons.forEach((btn, index) => {
+                btn.addEventListener('click', () => {
+                    const input = quantityInputs[index];
+                    let currentValue = parseInt(input.value);
+                    currentValue++;
+                    input.value = currentValue;
+                    input.dispatchEvent(new Event('input')); // Dispatch input event to trigger form submission
+                    updateQuantity(input, currentValue); // Update displayed quantity
+
+                });
+            });
+
+            // Function to update the displayed quantity
+            function updateQuantity(input, newValue) {
+                const row = input.closest('.row');
+                if (row) {
+                    const quantityElement = row.querySelector('.quantity');
+                    if (quantityElement) {
+                        quantityElement.textContent = newValue;
+                    }
+                }
+            }
+        });
+
+
+        // JavaScript code for handling checkbox click events and calculating total price
+        function calculateTotal() {
+            let totalPrice = 0;
+            document.querySelectorAll('.checkbox:checked').forEach(function (checkbox) {
+                // Retrieve price from data-price attribute and add to total price
+                totalPrice += parseFloat(checkbox.getAttribute('data-price'));
+            });
+            // Format total price with commas and two decimal places
+            const formattedTotalPrice = totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            // Display formatted total price
+            document.getElementById('totalPrice').textContent = formattedTotalPrice;
+
+            // Check if all checkboxes are checked and update "Select All" checkbox accordingly
+            const allCheckboxes = document.querySelectorAll('.checkbox');
+            const allChecked = [...allCheckboxes].every(checkbox => checkbox.checked);
+            document.querySelector('.selectAll').checked = allChecked;
+        }
+
+        document.querySelectorAll('.checkbox').forEach(function (checkbox) {
+            checkbox.addEventListener('change', calculateTotal);
+        });
+
+        // JavaScript code for handling "Select All" checkbox
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const selectAll2Checkbox = document.getElementById('selectAll2');
+
+        function toggleAllCheckboxes(checked) {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            const formCheckboxes = document.querySelectorAll('form input[type="checkbox"]');
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = checked;
+            });
+
+            formCheckboxes.forEach(function (checkbox) {
+                checkbox.checked = checked;
+            });
+            calculateTotal()
+        }
+
+        selectAllCheckbox.addEventListener('change', function () {
+            toggleAllCheckboxes(selectAllCheckbox.checked);
+        });
+
+        selectAll2Checkbox.addEventListener('change', function () {
+            toggleAllCheckboxes(selectAll2Checkbox.checked);
+        });
+
+        document.getElementById('delete-all').addEventListener('click', function () {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            checkboxes.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    checkbox.click();
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const formCheckboxes = document.querySelectorAll('form input[type="checkbox"]');
+            const standaloneCheckboxes = document.querySelectorAll('.checkbox');
+
+            // Add event listeners to form checkboxes
+            formCheckboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    // Get the corresponding standalone checkbox
+                    const standaloneCheckbox = document.querySelector(`.checkbox[data-product-id="${checkbox.value}"]`);
+                    if (standaloneCheckbox) {
+                        standaloneCheckbox.checked = this.checked;
+                    }
+
+                    // Update the "Select All" checkboxes
+                    const allChecked = Array.from(formCheckboxes).every(checkbox => checkbox.checked);
+                    selectAllCheckbox.checked = allChecked;
+                    selectAll2Checkbox.checked = allChecked;
+                });
+            });
+
+            // Add event listeners to standalone checkboxes
+            standaloneCheckboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    // Get the corresponding form checkbox
+                    const formCheckbox = document.querySelector(`form input[type="checkbox"][value="${checkbox.value}"]`);
+                    if (formCheckbox) {
+                        formCheckbox.checked = this.checked;
+                    }
+
+                    // Update the "Select All" checkboxes
+                    const allChecked = Array.from(standaloneCheckboxes).every(checkbox => checkbox.checked);
+                    selectAllCheckbox.checked = allChecked;
+                    selectAll2Checkbox.checked = allChecked;
+                });
+            });
+        });
+
+    </script>
+{% endblock content %}

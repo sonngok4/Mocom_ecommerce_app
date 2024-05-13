@@ -1,0 +1,35 @@
+<!-- order_history.html -->
+{% extends 'base.html' %}
+{% block style %}
+<style>
+    ul {
+        list-style-type: none;
+    }
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container d-flex flex-column align-items-center ">
+    <h1>Purchase order</h1>
+    {% if orders %}
+    <ul>
+        {% for order in orders %}
+        <li>
+            <h6>{{ order.created_at }}</h6>
+            <p>Total Price: LKR {{ order.total_price }}</p>
+            <div class="row d-flex flex-column">
+                {% for item in order.items.all %}
+                <div class="col d-flex w-100">
+                    <img src="{{item.product.thumbnail}}" alt="{{item.product.name}}" width="300rem">
+                    <p>{{ item.quantity }} x {{ item.product.name }} ({{ item.price }})</p>
+                </div>
+                {% endfor %}
+            </div>
+            <hr />
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No orders found.</p>
+</div>
+{% endif %}
+{% endblock %}

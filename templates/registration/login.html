@@ -8,6 +8,7 @@ Log In | {{block.super}}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
+        <p>Don't have an account? <a href="../signup/">Register</a></p>
         <button class="btn btn-success ml-2" type="submit">Log In</button>
     </form>
 </div>
