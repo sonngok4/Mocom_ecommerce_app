@@ -1,5 +1,7 @@
 from cart.models import Cart, CartItem
 from cart.views import add_to_cart
+from orders.models import Order
+from orders.views import order_history
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView
@@ -125,13 +127,13 @@ class CartDetailView(ListView):
 
 
 class OrderPageView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    model = Product
-    context_object_name = "products"
-    queryset = Product.objects.all()
+    model = Order
+    context_object_name = "orders"
+    queryset = Order.objects.all()
     template_name = "order_history.html"
     success_url = reverse_lazy("order_history")
     login_url = "login"
-
+    
     def test_func(self):
         return True
 
